@@ -1,0 +1,9 @@
+//standard cell library verolog file
+*.v
+
+// testbench
+../sourcecode/tb/mul_adr_tb_ps.v
+
+
+// source file gate level netlist
+../export/post_synth/mul_adr.postsyn.v

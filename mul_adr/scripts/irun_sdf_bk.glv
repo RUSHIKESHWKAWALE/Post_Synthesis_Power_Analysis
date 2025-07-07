@@ -1,0 +1,15 @@
+-gui
+-sv
+-v2001
+-debug
+-timescale 1ns/1ps
+-define GATE_LEVEL
+-define BACKANNOTATION
+-define SDF_FILE=\"../export/post_synth/mul_adr.postsyn.sdf\"
+-f ../sourcecode/dut_src_list_glv_sdf.txt
++sdf_verbose
+-sdfstats ../reports/sdf_statistics.rpt 
+-input ../scripts/backannotation.tcl
+
+
+

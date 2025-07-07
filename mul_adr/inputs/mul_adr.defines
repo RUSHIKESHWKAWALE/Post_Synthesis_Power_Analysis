@@ -1,0 +1,141 @@
+# Hierarchy
+set design(FULLCHIP_OR_MACRO) "MACRO" ; #FULLCHIP includes IO Ring
+set design(HAS_SCAN) "no" ; # Are there scan ports
+
+
+###############################################################################
+#
+# Technology Definition
+#
+###############################################################################
+# set TECHNOLOGY ""
+# set SC_TECHNOLOGY ""
+# set SRAM_TECHNOLOGY ""
+# set IO_TECHNOLOGY ""
+
+###############################################################################
+#
+# Port Definitions (From Verilog)
+#
+###############################################################################
+
+
+if {$design(FULLCHIP_OR_MACRO) == "FULLCHIP"} {
+  set design(IO_MODULE) ""
+  set design(IO_VERILOG) ""
+}
+
+
+###############################################################################
+#
+# SDC Settings
+#
+###############################################################################
+
+#DRV constrain
+set design(MAX_FANOUT) 16
+set design(MAX_TRANSITION) 0.35
+
+###############################################################################
+# Files and Paths
+###############################################################################
+set design(workdir) "$env(PWD)/$design(TOPLEVEL)/workspace"
+set design(project_root) "$env(PWD)/.."
+set design(inputs_dir) "$design(project_root)/inputs"
+set design(sourcecode_dir) "$design(project_root)/sourcecode"
+set design(hdl_search_paths) ".$design(sourcecode_dir)/vfiles"
+set design(read_hdl_list) "$design(sourcecode_dir)/dut_src_lst.txt"
+set design(testbench_dir) "$design(sourcecode_dir)/tb"
+set design(scripts_dir) "$design(project_root)/scripts"
+set design(dbs_dir) "$design(project_root)/dbs"
+set design(export_dir) "$design(project_root)/export"
+set design(reports_dir) "$design(project_root)/reports"
+set design(synthesis_reports) "$design(reports_dir)/synthesis"
+set design(functional_sdc) "$design(inputs_dir)/$design(TOPLEVEL).sdc"
+set design(postsyn_netlist) "$design(export_dir)/post_synth/$design(TOPLEVEL).postsyn.v"
+set design(postsyn_db_base_name) "$design(dbs_dir)/post_synth/$design(TOPLEVEL)"
+set design(postsyn_db) "$design(postsyn_db_base_name).stylus.enc"
+set design(postsyn_sdf) "$design(export_dir)/post_synth/$design(TOPLEVEL).postsyn.sdf"
+set design(postsyn_sdf1) "$design(export_dir)/post_synth/$design(TOPLEVEL).postsyn1.sdf"
+set design(floorplan_def) "$design(export_dir)/$design(TOPLEVEL).floorplan.def"
+set design(postroute_netlist) "$design(export_dir)/$design(TOPLEVEL).final.v"
+set design(postroute_sdf) "$design(export_dir)/$design(TOPLEVEL).final.sdf"
+set design(mmmc_view_file) "$design(inputs_dir)/$design(TOPLEVEL).mmmc"
+set design(io_file) "$design(inputs_dir)/$design(TOPLEVEL).io"
+set design(clock_tree_spec) "$design(inputs_dir)/$design(TOPLEVEL).ccopt"
+#set design(UPF_FILE)          "$design(inputs_dir)/$design(TOPLEVEL).upf"
+#set design(CPF_FILE)          "$design(inputs_dir)/$design(TOPLEVEL).cpf"
+#set design(dont_use_file)     "$design(inputs_dir)/$design(TOPLEVEL).dont_use"
+#set design(size_only_file)    "$design(inputs_dir)/$design(TOPLEVEL).size_only"
+
+
+###############################################################################
+#
+# Global Nets
+#
+###############################################################################
+set design(digital_gnd) "gnd"
+set design(all_ground_nets) $design(digital_gnd)
+set design(digital_vdd) "vdd"
+set design(all_power_nets) $design(digital_vdd)
+
+if {$design(FULLCHIP_OR_MACRO) == "FULLCHIP"} {
+  set design(io_gnd) "gnd"
+  lappend design(all_ground_nets) $design(io_gnd)
+  set design(io_vdd) "vddio"
+  lappend design(all_power_nets) $design(io_vdd)
+}
+#set design(additional_ground_nets) ""
+#lappend design(all_ground_nets) $design(additional_ground_nets)
+#set design(additional_power_nets) ""
+#lappend design(all_power_nets) $design(additional_power_nets)
+
+###############################################################################
+# Simulation and Backannotation
+###############################################################################
+set design(testbench_dir) "$design(project_root)/vfiles/tb"
+set design(backannotation_tb) "$design(testbench_dir)/$design(TOPLEVEL)_tb_ps.v"
+set design(tb_name) "$design(TOPLEVEL)_tb"
+set design(dut_name) "DUT"
+# For Backannotation and Power Reporting
+# set design(backannotation_script) "$design(testbench_dir)/$design(TOPLEVEL).backannotation.tcl"
+set design(backannotation_script) "$design(scripts_dir)/$design(TOPLEVEL).backannotation.tcl"
+set design(tcf_file) "$design(export_dir)/$design(tb_name).tcf"
+set design(vcd_file) "$design(export_dir)/post_sim/$design(TOPLEVEL).vcd"
+# set design(power_report_flow) "tcf" ; # "vcd" or "tcf" flow
+set design(power_report_flow) "vcd" ; # "vcd" or "tcf" flow
+set design(power_report_period) "600000000ps"
+set design(power_report_start_time) 0
+set design(power_report_end_time) "600000000ps"
+
+# set design(cost_groups)  ""
+
+###############################################################################
+#
+# Get rid of annoying messages
+#
+###############################################################################
+set design(DESIGN_SUPPRESS_MESSAGES_GENUS) "ST-110 ST-112 CFM-5 CFM-1"
+# Stop reporting elaboration of multi-dimensional arrays
+lappend design(DESIGN_SUPPRESS_MESSAGES_GENUS) "CDFG-250"
+# Stop reporting implementation inference (chipWare)
+lappend design(DESIGN_SUPPRESS_MESSAGES_GENUS) "( *)CWD-19 CWD-36"
+# Stop reporting Replaced logic with a constant value
+lappend design(DESIGN_SUPPRESS_MESSAGES_GENUS) "CDFG-771"
+# Stop reporting unreachable case statements
+lappend design(DESIGN_SUPPRESS_MESSAGES_GENUS) "CDFG-472"
+
+###############################################################################
+# Print values to debug file
+###############################################################################
+set df [open $debug_file w]
+puts $df "\n************************************************************"
+puts $df "* Values loaded from $design(TOPLEVEL).defines.tcl *"
+puts $df "************************************************************"
+# foreach var {TECHNOLOGY SC_TECHNOLOGY SRAM_TECHNOLOGY IO_TECHNOLOGY} {
+#   puts $df "$var = \t[set $var]"
+# }
+# foreach var {TECHNOLOGY} {
+#   puts $df "$var = \t[set $var]"
+# }
+
