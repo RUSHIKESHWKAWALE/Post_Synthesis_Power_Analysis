@@ -1,10 +1,15 @@
 # Power Synthesis Power Analysis
----
+***
 
-## 🌟 About the Project
+## 🌟 Introduction
 
-This includes the script to perform the power analysis of partial switching circuit of synthesised design.  
- 
+This includes the script to perform power analysis of partial switching circuits, to estimate the power compatible with operating conditions. 
+Power analysis provided by Prof. Adam Teman [RTL2GDS DeMO](https://www.youtube.com/playlist?list=PLZU5hLL_713zf_i38C7uLu5pUz5wTjKul) is employed.
+To estimate the power of the circuit, `.vcd` file is generated using the testbench where inputs to non-switching modules are constant.
+In the given example, a design with an adder and a multiplier is implemented.
+An `8-bit multiplier` and `adder` module is combined in a single design to perform power analysis.
+In the [testbench](mul_adr/sourcecode/tb/mul_adr_tb_ps.v), the inputs to the multiplier are kept constant, and the adder inputs are varied for all input combinations to create `mul_adr.vcd` file for power analysis.
+
 ---
 
 
@@ -12,7 +17,7 @@ This includes the script to perform the power analysis of partial switching circ
 ## 🚀 Getting Started
 
 Instructions on how to set up and run the project locally.
-
+___
 ### Prerequisites
 
 List any software, libraries, or tools users need to have installed before setting up your project.
@@ -22,7 +27,7 @@ Following are the requirements to run the project.
 * `Cadence Voltus` for Power analysis  
 * Standard cell library PDK
 * Verilog files and testbench
-
+___
 ### Set Enviornment
 1. **Clone the repository:**
     ```bash
@@ -34,6 +39,7 @@ Following are the requirements to run the project.
    ```bash
    cd mul_adr
    ```
+___
 ### Preparation
 
 1. **Add standard cell library:**
@@ -62,6 +68,7 @@ Following are the requirements to run the project.
 10. **Rename files**
     * Rename [mul_adr.defines](mul_adr/inputs/mul_adr.defines) to `design(TOPLEVEL).defines`.
     * Rename [mul_adr.vcd](mul_adr/export/post_sim/mul_adr.vcd) to `design(TOPLEVEL).vcd`.
+___
 ### Flow
 Set the workspace as the current directory
 ```bash
@@ -77,11 +84,12 @@ cd workspace
    ```bash
    ./irun_ru.sh
    ```
-   * To use `Cadence Xelium` change `irun` to `xrun` in  [irun_ru.sh](mul_adr/workspace/irun_ru.sh) file.
+   * To use `Cadence Xelium`, replace `irun` with `xrun` in [irun_ru.sh](mul_adr/workspace/irun_ru.sh) file.
    * If sufficient testcases are not covered, change the simulation time in [mul_adr.defines](mul_adr/inputs/mul_adr.defines#L107-L109) file.
 5. **Run power analysis**
   * Launch Voltus in stylus mode and run the command given in [voltus.tcl](./mul_adr/scripts/voltus.tcl) or run:
    ```bash
    ./voltus_ru.sh
    ```
-* It will generate a power in  `../report/power` directory. 
+* It will generate a power in  `../report/power` directory.
+___
