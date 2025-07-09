@@ -1,4 +1,4 @@
-# Power Synthesis Power Analysis
+# Post Synthesis Power Analysis
 ***
 
 ## 🌟 Introduction
