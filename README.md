@@ -79,6 +79,7 @@ cd workspace
    ```bash
    ./genus_ru.sh
    ```
+   * Exit genus after synthesis is finished.
 3. **Generate VCD file**
    * VCD file is generated from gate level simulation using `Cadence Incisive` by running below command:
    ```bash
@@ -86,6 +87,7 @@ cd workspace
    ```
    * To use `Cadence Xelium`, replace `irun` with `xrun` in [irun_ru.sh](mul_adr/workspace/irun_ru.sh) file.
    * If sufficient testcases are not covered, change the simulation time in [mul_adr.defines](mul_adr/inputs/mul_adr.defines#L107-L109) file.
+   * Close the simulator after `.vcd` file is generated.
 5. **Run power analysis**
   * Launch Voltus in stylus mode and run the command given in [voltus.tcl](./mul_adr/scripts/voltus.tcl) or run:
    ```bash
